@@ -26,11 +26,11 @@ typedef int elem_t;             ///<Тим элементов стэка
 #pragma pack(1)
 struct stack_t {
 #ifdef _DEBUG
-	int secureVarBeg = 0;
+	int secureVarBeg = 0;              ///<Первая канарейка
 #endif
 
 	elem_t* data = {};                 ///<Элементы стэка
-	const int delta = 5;                     ///<Значение дельта для реаллокации
+	const int delta = 5;               ///<Значение дельта для реаллокации
 	int curMaxSize = 0;                ///<Количество элементов, выделенных в памяти
 	int size = 0;                      ///<Настоящий размер стэка
 	const elem_t emptyelem = -2147483647;    ///<Элемент, соответствующий пустому
@@ -40,8 +40,10 @@ struct stack_t {
 	                                   ///0 - нет ошибок\n
 	                                   ///1 - выход за вержнюю границу стэка\n
 	                                   ///2 - выход за нижнюю границу стэка\n
-	unsigned int hash = 0;
-	int secureVarEnd = 0;
+	                                   ///3, 4 - испорчена соответственно первая или правая канарейка
+					   ///5 - неверная хэш-сумма
+	unsigned int hash = 0;             ///<Хэш-сумма
+	int secureVarEnd = 0;              ///<Вторая канарейка
 #endif
 };
 #pragma pack()
@@ -108,7 +110,7 @@ void StackDump(stack_t* stk, const char* file, const int line, const char* funct
 #endif
 
 /**
-*	Проверяет стэк
+*	Проверяет стэк и записывает в него код ошибки
 *
 *	@param[in] stk Стэк
 *
